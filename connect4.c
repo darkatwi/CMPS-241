@@ -7,7 +7,7 @@
 
 char board[rows][cols];
 
-//initialize the board with empty values (.)
+//initialize the board with empty values 
 void initializeBoard (char board[rows][cols]){
     for (int i= 0; i<rows; i++) {
         for (int j= 0; j<cols; j++){
@@ -59,73 +59,34 @@ void alternatePlayers(char *currentPlayer) {
 }
 
 
-//function to check horizontal 4 in a row
-int checkHorizontal(char board[rows][cols], char player) {
-    for(int i = 0; i < rows; i++) {
-        for(int j = 0; j <= cols - 4; j++) {
-            if(board[i][j] == player && 
-                board[i][j+1] == player && 
-                board[i][j+2] == player && 
-                board[i][j+3] == player)  
-                return 1; //horizontal 4 in a row found
-        }
+//check 4 in a row in any direction
+int checkDirection(char board[rows][cols], char player, int startRow, int startCol, int dRow, int dCol){
+    int inARow= 4; 
+    for (int k= 0; k< inARow; k++){
+        int r= startRow + k * dRow;
+        int c= startCol + k * dCol;
+        if (r<0 || r>=rows || c<0 ||c>=cols) return 0; // out of bounds
+        if (board[r][c]!=player) return 0; // not same player
     }
-    return 0;
+    return 1;
 }
-//function to check vertical 4 in a row
-int checkVertical (char board[rows][cols], char player){
-    for (int i= 0; i<=rows-4; i++) {
-        for (int j= 0; j<cols; j++){
-            if (board[i][j]==player &&
-                board[i+1][j]==player &&
-                board[i+2][j]==player &&
-                board[i+3][j]==player){
-                return 1; //found
-            }
-        }
-    }
-    return 0;
-}
-//function to check right diagonal 4 in a row
-int checkDiagonalRight (char board[rows][cols], char player){
-    for (int i= 0; i<=rows-4; i++){
-        for (int j= 0; j<=cols-4; j++){
-            if (board[i][j] == player &&
-                board[i+1][j+1]==player &&
-                board[i+2][j+2]==player &&
-                board[i+3][j+3]==player){
-                return 1; //found
-            }
-        }
-    }
-    return 0;
-}
-//function to check left diagonal 4 in a row
-int checkDiagonalLeft (char board[rows][cols], char player){
-    for (int i= 0; i<=rows-4; i++){
-        for (int j= 3; j<cols; j++){
-            if (board[i][j]==player &&
-                board[i+1][j-1]==player &&
-                board[i+2][j-2]==player &&
-                board[i+3][j-3]==player){
-                return 1; //found
-            }
-        }
-    }
-    return 0;
-}
-//function that combines all the above to check win
+
 int checkWin(char board[rows][cols], char player) {
-    return checkHorizontal(board, player) ||
-           checkVertical(board, player) ||
-           checkDiagonalRight(board, player) ||
-           checkDiagonalLeft(board, player);
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            if (checkDirection(board, player, i, j, 0, 1)) return 1;    // horizontal right
+            if (checkDirection(board, player, i, j, 1, 0)) return 1;    // vertical down
+            if (checkDirection(board, player, i, j, 1, 1)) return 1;    // diagonal down-right
+            if (checkDirection(board, player, i, j, 1, -1)) return 1;   // diagonal down-left
+        }
+    }
+    return 0; // no win found
 }
+
+// check for draw 
 int checkDraw(char board[rows][cols]) {
     for (int j = 0; j < cols; j++) {
-        if (board[0][j] == '.') {
-            return 0; // still space left
-        }
+        if (board[0][j] == '.') return 0; // still space left
     }
     return 1; // board is full
 }
@@ -133,10 +94,10 @@ int checkDraw(char board[rows][cols]) {
 //easy bot logic 
 void botMove(){
     int col;
-    int success = 0;
-    while (!success) {
-        col = rand() % cols; // pick random col
-        success = addValue(board, col, 'B');
+    int success= 0;
+    while (!success){
+        col= rand() % cols; // pick random col
+        success= addValue(board, col, 'B');
     }
     printf("Bot placed its checker in column %d.\n", col + 1);
 }
