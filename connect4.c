@@ -230,6 +230,7 @@ int getColumnFromUser(char player){
     }
 }
 
+// ---------------ULTIMATE Hard bot with Transposition Tables--------------
 
 //is column available
 int isValidLocation(int col) {
@@ -257,13 +258,14 @@ int countThreats(char piece) {
     return threats;
 }
 
+// Count potential three-in-a-rows (strong positions)
 // Count potential 3-in-a-rows that can be completed into a winning 4
 int countThreeInRows(char piece) {
     int count = 0;
 
     char opp = (piece == 'B') ? 'A' : 'B';
 
-    // HORIZONTAL 
+    // ---------- HORIZONTAL ----------
     for (int r = 0; r < rows; r++) {
         for (int c = 0; c < cols - 3; c++) {
             int piece_count = 0, empty_count = 0;
@@ -276,7 +278,7 @@ int countThreeInRows(char piece) {
         }
     }
 
-    // VERTICAL
+    // ---------- VERTICAL ----------
     for (int c = 0; c < cols; c++) {
         for (int r = 0; r < rows - 3; r++) {
             int piece_count = 0, empty_count = 0;
@@ -289,7 +291,7 @@ int countThreeInRows(char piece) {
         }
     }
 
-    //POSITIVE DIAGONAL 
+    // ---------- POSITIVE DIAGONAL (↘︎) ----------
     for (int r = 0; r < rows - 3; r++) {
         for (int c = 0; c < cols - 3; c++) {
             int piece_count = 0, empty_count = 0;
@@ -302,7 +304,7 @@ int countThreeInRows(char piece) {
         }
     }
 
-    //NEGATIVE DIAGONAL 
+    // ---------- NEGATIVE DIAGONAL (↗︎) — FIXED ----------
     for (int r = 3; r < rows; r++) {
         for (int c = 0; c < cols - 3; c++) {
             int piece_count = 0, empty_count = 0;
@@ -488,7 +490,7 @@ void ttStore(unsigned long long hash, int depth, int score, char flag) {
     }
 }
 
-// ULTIMATE Minimax with Transposition Tables - Depth 11
+// ULTIMATE Minimax with Transposition Tables - Depth 11!
 int minimax(int depth, int alpha, int beta, int maximizingPlayer, int *best_col_ptr) {
     // Check transposition table
     int ttScore;
@@ -594,7 +596,7 @@ void HardBotMove(){
 
     clock_t end = clock();
     double time_spent = (double)(end - start) / CLOCKS_PER_SEC;
-    (void)time_spent; 
+    (void)time_spent; // silence unused variable warning if not used
 
     if(best_col != -1 && isValidLocation(best_col)){
         addValue(board, best_col, 'B');
