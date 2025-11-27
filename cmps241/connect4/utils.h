@@ -1,0 +1,7 @@
+#ifndef UTILS_H
+#define UTILS_H
+
+void alternatePlayers(char *curr);
+int getColumnFromUser(char player);
+
+#endif
